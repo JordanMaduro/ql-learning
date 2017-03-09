@@ -1,34 +1,45 @@
 from ast.nodes import *
+from abc import ABCMeta, abstractmethod
+
 
 
 class QlAlg(object):
+    __metaclass__ = ABCMeta
 
+    @abstractmethod
     def literal(self, value):
         return Literal(value)
 
+    @abstractmethod
     def boolean(self, value):
         return Boolean(value)
 
+    @abstractmethod
     def block(self, statements):
         return Block(statements)
 
+    @abstractmethod
     def ifElse(self, test, body, else_body=None):
         return If(test, body, else_body)
 
+    @abstractmethod
     def empty(self):
         return EmptyNode()
 
+    @abstractmethod
     def assign(self, variable, data_type, value):
         return Assign(variable, data_type, value)
 
+    @abstractmethod
     def variable(self, name, value):
         return Variable(name, value)
 
+    @abstractmethod
     def question(self, variable, label, value):
         return Question(variable, label, value)
 
 
-class QlAlgView(object):
+class QlAlgView(QlAlg):
 
     def literal(self, value):
         literal = type("Literal", (Literal,), {
@@ -71,7 +82,7 @@ class QlAlgView(object):
         return question(variable, label, value)
 
 
-class QlAlgEval(object):
+class QlAlgEval(QlAlg):
 
     def literal(self, value):
         literal = type("Literal", (Literal,), {
