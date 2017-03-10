@@ -25,9 +25,8 @@ class Block(ASTNode):
 
 
 class Assign(Statement):
-    def __init__(self, variable, data_type, value):
+    def __init__(self, variable, value):
         self.variable = variable
-        self.data_type = data_type
         self.value = value
 
 
@@ -46,8 +45,9 @@ class If(Statement):
 
 
 class Variable(Expression):
-    def __init__(self, name, value=EmptyNode()):
+    def __init__(self, name, data_type, value=EmptyNode()):
         self.name = name
+        self.data_type = data_type
         self.value = value
 
 
@@ -61,3 +61,7 @@ class Literal(Expression):
 
 class Boolean(Expression):
     pass
+
+class Type(ASTNode):
+    def __init__(self, data_type):
+        self.data_type = data_type
