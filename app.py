@@ -91,6 +91,57 @@ def makeExpr(OAlg):
         )
     ])
 
+example_ast = Question(
+    variable=ast.nodes.Variable(
+        Literal("hasBoughtCar"),
+        Literal(True),  # Type(ast.types.Boolean()),
+        Literal(True)
+    ),
+    label=Literal("Did you buy a car in 2020?"),
+    value=Big(False)
+)
+
+
+class AlgebraFactory(object):
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def make(self, alg, tree):
+
+        @singledispatch
+        def handle_node(obj):
+            print obj
+            print "Got a Nothing"
+
+        @handle_node.register(Question)
+        def handle_Question(obj):
+            return alg.question(**apply_alg(vars(obj)))
+
+        @handle_node.register(Literal)
+        def handle_Literal(obj):
+            return alg.literal(**vars(obj))
+
+        @handle_node.register(ast.nodes.Variable)
+        def handle_Variable(obj):
+            return alg.variable(**apply_alg(vars(obj)))
+
+        @handle_node.register(Boolean)
+        def handle_Boolean(obj):
+            return alg.boolean(**vars(obj))
+        
+        @handle_node.register(Big)
+        def handle_Big(obj):
+            return alg.big(**vars(obj))
+
+        def apply_alg(params):
+            return {k: self.make(alg, v) for (k, v) in params.items()}
+
+        return handle_node(tree)
+
+
+
 
 # expr = makeExpr(QlAlgView())
 
@@ -99,6 +150,7 @@ def makeExpr(OAlg):
 # expr = makeExpr(QlAlgEval())
 
 # print(expr.eval())
+
 
 def alg_to_ast(tree):
 
@@ -112,11 +164,13 @@ def alg_to_ast(tree):
 
     return handle_node(tree)
 
-
-print alg_to_ast(Question("a","a","c"))
+action = QlAlgV2View
+instance_alg = AlgebraFactory.make(action(), Big("Apple"))
+print instance_alg.view()
 
 
 class Application(Frame):
+
     def say_hi(self):
         print "hi there, everyone!"
 

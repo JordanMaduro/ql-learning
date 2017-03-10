@@ -42,6 +42,7 @@ class QlAlg(object):
         pass
 
 
+
 class QlAlgView(QlAlg):
 
     def literal(self, value):
@@ -142,3 +143,19 @@ class QlAlgEval(QlAlg):
         _typeClass = type("Type", (Type,), {
             "eval": lambda self: 0 })
         return _typeClass(data_type)
+
+
+class QlAlgV2(QlAlg):
+    __metaclass__ = ABCMeta
+    @abstractmethod
+    def big(self, value):
+        pass
+
+class QlAlgV2View(QlAlgView):
+
+    def big(self, value):
+        big = type("Big", (Big,), {
+                       "view": lambda self: "Big({})".format(str(self.value))})
+        return big(value)
+    
+    
