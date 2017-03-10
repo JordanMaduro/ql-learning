@@ -4,7 +4,10 @@ import ui.elements
 from Tkinter import *
 
 
+
+
 class QlAlgGUI(ql.QlAlg):
+    ''' TODO  Proper implementation of the Render functions '''
     """ Return form elements """
 
     def literal(self, value):

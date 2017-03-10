@@ -3,6 +3,7 @@ from object_algebras.ql import *
 from object_algebras.gui import *
 import ast.types
 from Tkinter import *
+from singledispatch import singledispatch
 
 
 def makeExpr(OAlg):
@@ -98,7 +99,21 @@ def makeExpr(OAlg):
 # expr = makeExpr(QlAlgEval())
 
 # print(expr.eval())
-expr = makeExpr(QlAlgGUI())
+
+def alg_to_ast(tree):
+
+    @singledispatch
+    def handle_node(obj):
+        print "Got a Nothing"
+
+    @handle_node.register(Question)
+    def handle_Question(obj):
+        print "Got a question"
+
+    return handle_node(tree)
+
+
+print alg_to_ast(Question("a","a","c"))
 
 
 class Application(Frame):
@@ -132,6 +147,13 @@ root = Tk()
 root.maxsize(root.maxsize(1000, 400), 400)
 root.minsize(400, 400)
 app = Application(master=root)
+
+# Register variables and create Hashmap
+# Should create a context with reference to the Hashmap and pass it to the Render Algebra
+# A context could be a State object
+# Create a renderable AST with method Render()
+expr = makeExpr(QlAlgGUI())
+# Render AST to Window!
 expr.render(root)
 
 app.mainloop()
