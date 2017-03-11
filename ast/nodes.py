@@ -18,6 +18,11 @@ class Statement(ASTNode):
 class EmptyNode(ASTNode):
     pass
 
+class Form(ASTNode):
+    def __init__(self, name, block):
+        self.name = name
+        self.block = block
+
 
 class Block(ASTNode):
     def __init__(self, statements):

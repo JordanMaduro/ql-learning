@@ -4,8 +4,13 @@ from object_algebras.gui import *
 import ast.types
 from Tkinter import *
 from singledispatch import singledispatch
+from grammars import ql
+import sys
 
-
+parser = ql.Parser()
+parsed_ast = parser.parse('form aaa {  "Did you sell a house in 2010?" hasSoldHouse: boolean }')
+print parsed_ast
+sys.exit()
 def makeExpr(OAlg):
 
     # return OAlg.ifElse(OAlg.boolean(True), OAlg.literal(21), OAlg.literal(78))
@@ -18,7 +23,7 @@ def makeExpr(OAlg):
         OAlg.question(
             OAlg.variable(
                 OAlg.literal("hasSoldHouse"),
-                OAlg.type(ast.types.Boolean()),
+                OAlg.type(ast.stypes.Boolean()),
                 OAlg.literal(None)),
             OAlg.literal("Have you sold a house?"),
             OAlg.boolean(False)
@@ -164,8 +169,8 @@ def alg_to_ast(tree):
 
     return handle_node(tree)
 
-action = QlAlgV2View
-instance_alg = AlgebraFactory.make(action(), Big("Apple"))
+action = QlAlgView
+instance_alg = AlgebraFactory.make(action(), Literal("Apple"))
 print instance_alg.view()
 
 
