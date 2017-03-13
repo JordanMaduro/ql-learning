@@ -1,75 +1,131 @@
 class ASTNode(object):
-    pass
 
-
-class ASTree(ASTNode):
-    pass
+    def alg(self, _alg):
+        pass
 
 
 class Expression(ASTNode):
-    def __init__(self, value):
-        self.value = value
+    pass
 
 
 class Statement(ASTNode):
     pass
 
 
-class EmptyNode(ASTNode):
-    pass
+class Value(ASTNode):
+
+    def __init__(self, value):
+        self.value = value
+
+
+class Label(ASTNode):
+
+    def __init__(self, label):
+        self.label = label
+
+    def alg(self, _alg):
+        return _alg.label(self.label)
+
+
+class Literal(ASTNode):
+
+    def __init__(self, value):
+        self.value = value
+
+
+class Primitive(ASTNode):
+
+    def __init__(self, value):
+        self.value = value
+
+
+class Variable(ASTNode):
+
+    def __init__(self, name, datatype):
+        self.name = name
+        self.datatype = datatype
+
+    def alg(self, _alg):
+        return _alg.variable(self.name, self.datatype.alg(_alg))
+
 
 class Form(ASTNode):
+
     def __init__(self, name, block):
         self.name = name
         self.block = block
 
-
-class Block(ASTNode):
-    def __init__(self, statements):
-        self.statements = statements
-
-
-class Assign(Statement):
-    def __init__(self, variable, value):
-        self.variable = variable
-        self.value = value
+    def alg(self, _alg):
+        return _alg.form(self.name.alg(_alg), self.block.alg(_alg))
 
 
 class Question(Statement):
-    def __init__(self, variable, label, value):
+
+    def __init__(self, variable, label):
         self.variable = variable
         self.label = label
-        self.value = value
+
+    def alg(self, _alg):
+        return _alg.question(self.variable.alg(_alg), self.label)
 
 
-class If(Statement):
-    def __init__(self, test, body, else_body=EmptyNode()):
-        self.test = test
-        self.body = body
-        self.else_body = else_body
+class StringPrimitive(Primitive):
+    def alg(self, _alg):
+        return _alg.stringPrimitive(self.value)
 
 
-class Variable(Expression):
-    def __init__(self, name, data_type, value=EmptyNode()):
-        self.name = name
-        self.data_type = data_type
-        self.value = value
-
-
-class BinaryOperation(Expression):
+class BooleanPrimitive(Primitive):
     pass
 
 
-class Literal(Expression):
+class DatePrimitive(Primitive):
     pass
 
 
-class Boolean(Expression):
+class MoneyPrimitive(Primitive):
     pass
+
 
 class Type(ASTNode):
-    def __init__(self, data_type):
-        self.data_type = data_type
 
-class Big(Expression):
-    pass
+    def __init__(self):
+        pass
+
+
+class BooleanType(ASTNode):
+
+    def alg(self, _alg):
+        return _alg.boolean_type()
+
+
+class StringType(ASTNode):
+
+    def alg(self, _alg):
+        return _alg.string_type()
+
+
+class IntegerType(ASTNode):
+
+    def alg(self, _alg):
+        return _alg.integer_type()
+
+
+class MoneyType(ASTNode):
+
+    def alg(self, _alg):
+        return _alg.money_type()
+
+
+class DateType(ASTNode):
+
+    def alg(self, _alg):
+        return _alg.date_type()
+
+
+class Block(ASTNode):
+
+    def __init__(self, statements):
+        self.statements = statements
+
+    def alg(self, _alg):
+        return _alg.block([x.alg(_alg) for x in self.statements])
