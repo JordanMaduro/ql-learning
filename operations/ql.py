@@ -46,6 +46,7 @@ class QlAlgView(QlAlg):
     def literal(self, value):
         literal = type("Literal", (Literal,), {
                        "view": lambda self: "Literal({})".format(str(self.value))})
+        
         return literal(value)
 
     def label(self, label):
